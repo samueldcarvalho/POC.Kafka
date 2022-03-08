@@ -17,7 +17,7 @@ namespace POC.Kafka.Consumer
 
             using (var c = new ConsumerBuilder<Ignore, string>(conf).Build())
             {
-                c.Subscribe("topico_obj");
+                c.Subscribe("mysql-server-sender.products.type_product");
 
                 var cts = new CancellationTokenSource();
                 Console.CancelKeyPress += (_, e) => {
