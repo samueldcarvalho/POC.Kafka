@@ -10,14 +10,14 @@ namespace POC.Kafka.Consumer
         {
             var conf = new ConsumerConfig
             {
-                GroupId = "test-consumer-group",
+                GroupId = "teste-consumer-group",
                 BootstrapServers = "127.0.0.1:9092",
                 AutoOffsetReset = AutoOffsetReset.Earliest
             };
 
             using (var c = new ConsumerBuilder<Ignore, string>(conf).Build())
             {
-                c.Subscribe("test-topic");
+                c.Subscribe("topico_obj");
 
                 var cts = new CancellationTokenSource();
                 Console.CancelKeyPress += (_, e) => {
@@ -32,7 +32,7 @@ namespace POC.Kafka.Consumer
                         try
                         {
                             var cr = c.Consume(cts.Token);
-                            Console.WriteLine($"Consumed message '{cr.Value}' at: '{cr.TopicPartitionOffset}'.");
+                            Console.WriteLine($"Objeto recebido: '{cr.Value}' EM '{cr.TopicPartitionOffset}'.");
                         }
                         catch (ConsumeException e)
                         {

@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka;
+using Newtonsoft.Json;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,11 +19,18 @@ namespace POC.Kafka.Source
                     var count = 0;
                     while (true)
                     {
-                        count++;
-                        var dr = await p.ProduceAsync("test-topic", new Message<Null, string> { Value = $"TESTE DE MENSAGEM: Nº{count}" });
-                        Console.WriteLine($"Delivered '{dr.Value}' to '{dr.TopicPartitionOffset}' | {count}");
+                        var obj = new Objeto()
+                        {
+                            Id = count,
+                            Name = "Objeto-#Id:" + count,
+                            DataCriacao = DateTime.Now
+                        };
 
-                        Thread.Sleep(4000);
+                        count++;
+                        var dr = await p.ProduceAsync("topico_obj", new Message<Null, string>() { Value = JsonConvert.SerializeObject(obj) });
+                        Console.WriteLine($"Enviando: '{dr.Value}' para '{dr.TopicPartitionOffset}' | {count}");
+                        
+                        Thread.Sleep(1000);
                     }
                 }
                 catch (ProduceException<Null, string> e)
@@ -31,5 +39,12 @@ namespace POC.Kafka.Source
                 }
             }
         }
+    }
+
+    public class Objeto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public DateTime DataCriacao { get; set; }
     }
 }
